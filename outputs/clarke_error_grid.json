@@ -1,0 +1,18 @@
+{
+  "zone_counts": {
+    "A": 249,
+    "B": 1,
+    "C": 0,
+    "D": 0,
+    "E": 0
+  },
+  "zone_percentages": {
+    "A": 99.6,
+    "B": 0.4,
+    "C": 0.0,
+    "D": 0.0,
+    "E": 0.0
+  },
+  "clinically_acceptable_A_plus_B_pct": 100.0,
+  "total_evaluated_points": 250
+}
