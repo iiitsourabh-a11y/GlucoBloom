@@ -1,30 +1,30 @@
 [
   {
     "adaptation_days": 1,
-    "samples_seen": 288,
-    "general_model_mae": 3.14,
-    "personalized_twin_mae": 3.05,
-    "improvement_pct": 3.0
+    "samples_seen": 262,
+    "general_model_mae": 8.74,
+    "personalized_twin_mae": 6.94,
+    "improvement_pct": 20.6
   },
   {
     "adaptation_days": 3,
-    "samples_seen": 864,
-    "general_model_mae": 3.14,
-    "personalized_twin_mae": 3.03,
-    "improvement_pct": 3.7
+    "samples_seen": 787,
+    "general_model_mae": 8.74,
+    "personalized_twin_mae": 6.49,
+    "improvement_pct": 25.7
   },
   {
-    "adaptation_days": 7,
-    "samples_seen": 2016,
-    "general_model_mae": 3.14,
-    "personalized_twin_mae": 2.87,
-    "improvement_pct": 8.8
+    "adaptation_days": 5,
+    "samples_seen": 1335,
+    "general_model_mae": 8.74,
+    "personalized_twin_mae": 6.53,
+    "improvement_pct": 25.3
   },
   {
-    "adaptation_days": 14,
-    "samples_seen": 4032,
-    "general_model_mae": 3.14,
-    "personalized_twin_mae": 2.9,
-    "improvement_pct": 7.8
+    "adaptation_days": 8,
+    "samples_seen": 2136,
+    "general_model_mae": 8.74,
+    "personalized_twin_mae": 6.44,
+    "improvement_pct": 26.4
   }
 ]

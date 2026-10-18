@@ -129,15 +129,15 @@ with st.sidebar:
     
     st.markdown("---")
     st.subheader("Active Patient Twin")
-    patient_sel = st.selectbox("Selected Patient Profile", ["Patient p8 (T1D Holdout - Personalized Twin Available)", "Patient p9 (Unseen Test Holdout - General Model)", "Patient p10 (Unseen Test Holdout - General Model)"])
-    patient_id = "p8" if "p8" in patient_sel else ("p9" if "p9" in patient_sel else "p10")
+    patient_sel = st.selectbox("Selected Patient Profile", ["Patient 175 (T2D Holdout - Personalized Twin Available)", "Patient 180 (Unseen Test Holdout - General Model)", "Patient 190 (Unseen Test Holdout - General Model)"])
+    patient_id = "175" if "175" in patient_sel else ("180" if "180" in patient_sel else "190")
     
     model_choice = st.radio(
         "Active Model Architecture:",
-        ["Personalized Twin (Fine-tuned)" if patient_id == "p8" else "General Model Only", "General Foundation Model"],
+        ["Personalized Twin (Fine-tuned)" if patient_id == "175" else "General Model Only", "General Foundation Model"],
         index=0
     )
-    use_personal = ("Personalized" in model_choice) and (patient_id == "p8")
+    use_personal = ("Personalized" in model_choice) and (patient_id == "175")
     
     st.markdown("---")
     st.subheader("Feature Trust Classification")
