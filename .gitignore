@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.env
+
+# Data Privacy & Large Files
+data/cgm_multi_patient.csv
+*.csv
+*.parquet
+
+# Model binaries (can be saved/built via train_pipeline.py)
+# Keep lightweight demo outputs
+.DS_Store

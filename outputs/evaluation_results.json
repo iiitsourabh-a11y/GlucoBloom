@@ -1,0 +1,17 @@
+{
+  "persistence_baseline": {
+    "mae": 6.99,
+    "rmse": 11.36
+  },
+  "linear_regression": {
+    "mae": 5.22,
+    "rmse": 8.93
+  },
+  "xgboost_general": {
+    "mae": 3.23,
+    "rmse": 4.97
+  },
+  "quantile_coverage_pct": 94.0,
+  "personalization_p8_final_mae": 2.9,
+  "personalization_improvement_pct": 7.8
+}
