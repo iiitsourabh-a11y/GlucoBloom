@@ -163,13 +163,15 @@ with st.sidebar:
     use_personal = ("Personalized" in model_choice) and (patient_id == "175")
     
     st.markdown("---")
-    st.subheader("Feature Trust Classification")
-    st.markdown("""
-    - <span class='badge-working'>🟢 WORKING</span> Verified on 25 held-out patients
-    - <span class='badge-demo'>🟡 DEMONSTRATION</span> Physiological simulator
-    - <span class='badge-future'>⚪ FUTURE</span> Clinical roadmap integration
-    """, unsafe_allow_html=True)
-    
+    st.subheader("📂 Upload Your Own CGM Data")
+    user_csv = st.file_uploader("Upload CGM CSV", type=["csv"], help="Upload any CSV file containing glucose readings. Supports standard Dexcom, Libre, or generic formats.")
+    try:
+        with open(os.path.join(DATA_DIR, "sample_template.csv"), "r") as tf:
+            tmpl_data = tf.read()
+        st.download_button("📥 Download CSV Template", data=tmpl_data, file_name="cgm_template.csv", mime="text/csv")
+    except Exception:
+        pass
+
     st.markdown("---")
     st.caption("GlucoBloom v1.2 | Competition Ready Prototype")
 
@@ -212,16 +214,42 @@ with tab1:
     
     col_sl, col_st = st.columns([2, 1])
     with col_sl:
-        st.caption("Adjust current sensor reading and recent 15-minute rate of change to test the model live:")
-        curr_slider = st.slider("Current CGM Glucose (mg/dL)", 60.0, 320.0, 168.0, 1.0)
-        vel_choice = st.select_slider(
-            "15-Minute Trend Velocity",
-            options=["Rapid Fall (-16 mg/dL)", "Gentle Fall (-6 mg/dL)", "Flat (0 mg/dL)", "Gentle Rise (+8 mg/dL)", "Rapid Spike (+18 mg/dL)"],
-            value="Gentle Rise (+8 mg/dL)"
-        )
-        vel_val = -16.0 if "Rapid Fall" in vel_choice else (-6.0 if "Gentle Fall" in vel_choice else (0.0 if "Flat" in vel_choice else (8.0 if "Gentle Rise" in vel_choice else 18.0)))
-        
-        sim_readings = [curr_slider - vel_val * (11 - i) / 3.0 for i in range(12)]
+        if user_csv is not None:
+            try:
+                up_df = pd.read_csv(user_csv)
+                g_col = None
+                for c in up_df.columns:
+                    if any(k in c.lower() for k in ["glucose", "cgm", "historic", "sensor", "value"]):
+                        g_col = c
+                        break
+                if g_col is None:
+                    g_col = up_df.select_dtypes(include=[np.number]).columns[0]
+                
+                vals = pd.to_numeric(up_df[g_col], errors="coerce").dropna().values
+                st.success(f"📂 **Custom Data Loaded:** `{user_csv.name}` ({len(vals):,} readings found in column `{g_col}`).")
+                
+                if len(vals) >= 12:
+                    scrub = st.slider("Scrub Historical Timestamp (Select 12-Reading Window)", 12, len(vals), len(vals))
+                    sim_readings = [float(v) for v in vals[scrub-12:scrub]]
+                else:
+                    st.warning("Uploaded file contains fewer than 12 readings; padding with earliest available value.")
+                    sim_readings = [float(vals[0])] * (12 - len(vals)) + [float(v) for v in vals]
+            except Exception as e:
+                st.error(f"Error reading CSV: {e}. Reverting to standard controls.")
+                curr_slider = st.slider("Current CGM Glucose (mg/dL)", 60.0, 320.0, 168.0, 1.0)
+                vel_choice = st.select_slider("15-Min Velocity", options=["Falling (-10)", "Flat (0)", "Rising (+10)"], value="Rising (+10)")
+                v_num = 10.0 if "Rising" in vel_choice else (-10.0 if "Falling" in vel_choice else 0.0)
+                sim_readings = [curr_slider - v_num * (11 - i) / 3.0 for i in range(12)]
+        else:
+            st.caption("Adjust current sensor reading and recent 15-minute rate of change to test the model live (or upload your own CSV in the sidebar!):")
+            curr_slider = st.slider("Current CGM Glucose (mg/dL)", 60.0, 320.0, 168.0, 1.0)
+            vel_choice = st.select_slider(
+                "15-Minute Trend Velocity",
+                options=["Rapid Fall (-16 mg/dL)", "Gentle Fall (-6 mg/dL)", "Flat (0 mg/dL)", "Gentle Rise (+8 mg/dL)", "Rapid Spike (+18 mg/dL)"],
+                value="Gentle Rise (+8 mg/dL)"
+            )
+            vel_val = -16.0 if "Rapid Fall" in vel_choice else (-6.0 if "Gentle Fall" in vel_choice else (0.0 if "Flat" in vel_choice else (8.0 if "Gentle Rise" in vel_choice else 18.0)))
+            sim_readings = [curr_slider - vel_val * (11 - i) / 3.0 for i in range(12)]
         
     now = datetime.now()
     feat = extract_features(sim_readings, now)
