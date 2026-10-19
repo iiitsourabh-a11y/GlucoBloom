@@ -13,9 +13,10 @@
 
 ### 1. Team Details
 * **Team Name:** Team GlucoBloom
-* **Member 1 (Person A - AI/ML & Pipeline):** Sourabh (Lead AI Engineer & Data Pipeline Developer)
-* **Member 2 (Person B - Web & Clinical UI):** Frontend & Clinical Interface Developer
-* **Contact Email:** sourabh@example.com
+* **Lead Engineer (Person A - AI/ML & Pipeline):** Sourabh ([@iiitsourabh-a11y](https://github.com/iiitsourabh-a11y))
+* **Co-Developer (Person B - Web & Clinical UI):** Clinical Frontend Developer
+* **Contact Email:** iiitsourabh@gmail.com
+* **Official Repository Link:** [https://github.com/iiitsourabh-a11y/glucobloom](https://github.com/iiitsourabh-a11y/glucobloom)
 
 ### 2. College / Incubator Information
 * **Institution / University:** [Your University / College Name Here]
