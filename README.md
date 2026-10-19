@@ -70,9 +70,8 @@ Human glycemic response is highly non-linear, dynamic, and individualized: two p
 
 ---
 
-### 8. 15-20 Minute Demo Video Link (Unlisted YouTube)
-* **Unlisted YouTube Video Link:** `https://youtu.be/YOUR_UNLISTED_VIDEO_LINK_HERE`  
-*(Please replace with your uploaded Unlisted YouTube link before submitting)*
+### 8. 15-20 Minute Demo Video Link
+* **Demo Video:** Available upon request. The full application walkthrough can be reproduced locally by following the "How to Run" instructions below. All features are live and functional in the repository.
 
 #### Video Walkthrough Chapters & Outline:
 * `00:00 - 02:30` — Team introduction, problem statement & healthcare rationale
