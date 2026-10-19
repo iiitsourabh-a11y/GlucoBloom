@@ -1,97 +1,135 @@
 # 🌸 GlucoBloom: AI-Powered Personalized Digital Twin for Glucose Forecasting
 
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![XGBoost](https://img.shields.io/badge/ML-XGBoost%20%7C%20Quantiles-orange.svg)](https://xgboost.readthedocs.io/)
 [![FastAPI](https://img.shields.io/badge/Backend-FastAPI-009688.svg)](https://fastapi.tiangolo.com/)
-[![Streamlit](https://img.shields.io/badge/UI-Streamlit%201.66-FF4B4B.svg)](https://streamlit.io/)
-[![Clinical Safety](https://img.shields.io/badge/Clarke%20Grid-100%25%20Zone%20A%2BB-success.svg)](#clinical-safety--clarke-error-grid)
-
-> **GlucoBloom** is a clinical AI prototype that personalizes continuous glucose forecasting. Moving beyond retrospective logging, GlucoBloom captures multi-person metabolic dynamics, rapidly adapts to an individual's personal physiology, predicts glucose 30 minutes ahead with calibrated 80% prediction intervals, validates clinical safety via the Clarke Error Grid, and simulates what-if lifestyle scenarios.
+[![Streamlit](https://img.shields.io/badge/UI-Streamlit-FF4B4B.svg)](https://streamlit.io/)
+[![Clinical Safety](https://img.shields.io/badge/Clarke%20Grid-100%25%20Zones%20A%2BB-success.svg)](#clinical-safety--clarke-error-grid-analysis)
 
 ---
 
-## 🏆 Key Benchmark Highlights (Evaluated on 25 Unseen Test Patients)
+## 📋 Mandatory Submission Details (Digital Twin Challenge 2026)
 
-* **Baseline Beating:** Cuts 30-minute forward error from **17.20 mg/dL** (Persistence Baseline) down to **7.64 mg/dL** (XGBoost General Model) — a **55.6% relative improvement**.
-* **Personalization Gain:** Fine-tuning on an individual's history yields a **+26.4% accuracy boost** (reducing holdout error from 8.74 down to **6.44 mg/dL**).
-* **Uncertainty Calibration:** 80% prediction intervals achieve **85.0% empirical coverage** on held-out patients.
-* **Clinical Safety Validation:** **100.0% of predictions fall in Clarke Error Grid Zones A + B** (99.6% in Zone A alone), confirming zero dangerous treatment errors.
+### 1. Team Details
+* **Team Name:** Team GlucoBloom
+* **Member 1 (Person A - AI/ML & Pipeline):** Sourabh (Lead AI Engineer & Data Pipeline Developer)
+* **Member 2 (Person B - Web & Clinical UI):** Frontend & Clinical Interface Developer
+* **Contact Email:** sourabh@example.com
+
+### 2. College / Incubator Information
+* **Institution / University:** [Your University / College Name Here]
+* **Incubator / Department:** Department of Computer Science & Artificial Intelligence / Healthcare Innovation Lab
+
+### 3. Project Title
+**GlucoBloom: An AI-Powered Personalized Digital Twin for Continuous Glucose Forecasting, Uncertainty Quantification, and What-If Lifestyle Simulation**
+
+### 4. Problem Statement
+Continuous Glucose Monitoring (CGM) devices have transformed diabetes self-management by reporting real-time interstitial glucose levels every 5 minutes. However, existing commercial platforms suffer from a critical limitation: **they operate purely in reverse, displaying retrospective numbers rather than actionable forward trajectories.** 
+
+Human glycemic response is highly non-linear, dynamic, and individualized: two people ingesting the exact same meal exhibit vastly different blood glucose curves due to differences in insulin sensitivity, gastric clearance rate, physical activity, and diurnal circadian cortisol cycles. Static, one-size-fits-all population models fail to generalize, leading to alarm fatigue and dangerous insulin stacking overcorrections.
+
+### 5. Healthcare Use Case
+* **Target Patient Population:** Individuals living with Type 1 Diabetes (T1D), Insulin-requiring Type 2 Diabetes (T2D), and prediabetes.
+* **Clinical Setting:** Ambulatory diabetes care, endocrinology clinics, and automated decision-support applications.
+* **Core Clinical Purpose:**
+  1. **30-Minute Early Warning Window:** Anticipating imminent hypoglycemic events (<70 mg/dL) or postprandial hyperglycemia (>180 mg/dL) 30 minutes in advance, allowing preventive action (e.g. fast-acting carbs or a brief walk) before symptoms manifest.
+  2. **Personalized Metabolic Adaptation:** Tracking an individual's digital twin as it personalizes to their circadian rhythms and recovery rates over 1 to 14 days of CGM history.
+  3. **Lifestyle Intervention Simulation ("Fan of Futures"):** Demonstrating the prospective glycemic impact of meal carbohydrates versus physical exercise before eating.
+
+### 6. Technical Stack
+* **Programming Language:** Python 3.10+ (tested on Python 3.14)
+* **Data Processing & Feature Engineering:** `pandas`, `numpy`, `scipy`
+* **Machine Learning & Gradient Boosting:** `scikit-learn`, `xgboost` (Quantile Regressors for $\alpha=0.10, \alpha=0.90$)
+* **Model Serialization:** `joblib`
+* **API Service:** `FastAPI`, `pydantic`, `uvicorn`, `httpx`
+* **Web UI & Interactive Visualizations:** `streamlit`, `plotly`
+* **Clinical Report Generation:** `reportlab`
+* **Version Control & Documentation:** Git, GitHub, Markdown
+
+### 7. AI/ML Model & Framework Details
+* **Multi-Patient Population Dataset:** 200 virtual diabetic patients across 14–21 days of continuous monitoring (806,400 raw readings; 748,637 engineered sliding windows) incorporating CGM, meal carbs, steps, heart rate, and sleep.
+* **Evaluation Protocol:** Strict patient-level split (160 train patients, 15 validation patients, and 25 completely unseen held-out test patients). **Zero random row leakage.**
+* **Level 1 General Foundation Model:** XGBoost Regressor trained on 160 patients, capturing universal kinetics and diurnal rhythms.
+* **Level 2 Personalized Digital Twin Adapter:** Temporal fine-tuning on unseen patient history (Patient 175) across Days 1, 3, 5, and 8 without catastrophic forgetting.
+* **Calibrated Uncertainty:** XGBoost Quantile Regressors predicting 10th and 90th percentiles to render an 80% confidence interval cone.
+* **Feature Vector (15 features):** Current CGM reading, historical lags ($t-5, t-10, t-15, t-30, t-60$ mins), 15m & 30m velocity, 30m cumulative carbs, 30m cumulative steps, heart rate, HRV, sleep state, and circadian diurnal phase ($\sin / \cos$ of hour).
+
+#### Quantitative Benchmark Results (25 Held-Out Test Patients)
+| Model / Strategy | MAE (mg/dL) | RMSE (mg/dL) | Relative Gain vs Baseline | Clinical Status |
+| :--- | :---: | :---: | :---: | :--- |
+| **Persistence Baseline (t = t+30m)** | **17.20** | **29.59** | *0.0% (Reference)* | Blind to trajectory |
+| **Linear Regression Benchmark** | **10.89** | **15.60** | +36.7% | Linear approximation |
+| **XGBoost General Foundation Model** | **7.64** | **11.94** | **+55.6%** | High precision |
+| **Personalized Twin (Patient 175 Holdout)** | **6.44** | **9.81** | **+26.4% Personalization Gain** | Optimal personalized fit |
+
+* **Uncertainty Calibration:** 80% prediction cone achieved **85.0% empirical coverage** on held-out test patients.
+* **Clinical Safety (Clarke Error Grid Analysis):** **100.0% of predictions fall in Zones A + B** (99.6% in Zone A alone), proving zero clinically dangerous treatment errors.
 
 ---
 
-## 🚀 Quickstart: Running GlucoBloom
+### 8. 15-20 Minute Demo Video Link (Unlisted YouTube)
+* **Unlisted YouTube Video Link:** `https://youtu.be/YOUR_UNLISTED_VIDEO_LINK_HERE`  
+*(Please replace with your uploaded Unlisted YouTube link before submitting)*
 
-### 1. Installation
-Clone the repository and install dependencies:
+#### Video Walkthrough Chapters & Outline:
+* `00:00 - 02:30` — Team introduction, problem statement & healthcare rationale
+* `02:30 - 05:00` — Clinical CGM dataset overview & strict patient-level splitting
+* `05:00 - 08:30` — Machine learning pipeline: Persistence baseline, XGBoost & quantile regression
+* `08:30 - 12:00` — Live Interactive Walkthrough: 30-min Forecast Cone & CSV Drag-and-Drop Uploader
+* `12:00 - 14:30` — Digital Twin Personalization: +26.4% error reduction trajectory & Time Machine replay
+* `14:30 - 17:00` — Clarke Error Grid Analysis (100% Zones A+B) & Scenario Studio ("Fan of Futures")
+* `17:00 - 19:30` — Smart Data Quality Checker, Doctor-Ready AGP Report Export & Conclusion
+
+---
+
+### 9. Open-Source License Details
+GlucoBloom is released under the **MIT Open-Source License**. Full license details are available in the repository at [LICENSE](LICENSE).
+
+---
+
+### 10. Architecture Diagram (PDF / PPT Format)
+* **Architecture Diagram (PDF):** Available in the repository at [docs/architecture_diagram.pdf](docs/architecture_diagram.pdf).
+* Full vector block diagram depicting the 4-layer architecture:
+  1. Sensor Ingestion & Data Quality Guard
+  2. Feature Engineering & Patient-Holdout Splitting
+  3. Two-Level AI Digital Twin Engine (General + Quantiles + Personal Adapter)
+  4. Clinical Decision Support UI & AGP Export
+
+---
+
+### 11. Presentation (PDF / PPT Format)
+* **Project Presentation Slides (PDF):** Available in the repository at [docs/presentation.pdf](docs/presentation.pdf).
+* **Pitch Deck & Demo Script (Markdown):** Available at [docs/PITCH_DECK.md](docs/PITCH_DECK.md).
+* Covers project motivation, clinical background, dataset details, mathematical formulation, benchmark outcomes, and safety evaluation.
+
+---
+
+### 12. Public Accessibility Statement
+All files, models, documents, and scripts within this repository are **publicly accessible without additional permissions or login requirements**, in strict accordance with the Digital Twin Challenge 2026 guidelines.
+
+---
+
+## 💻 How to Run the Project Locally
+
+### 1. Install Dependencies
 ```powershell
-cd "D:\Amazon ML Challange 2026\glucobloom"
 python -m pip install -r requirements.txt
 ```
-*(Dependencies: `streamlit`, `fastapi`, `uvicorn`, `xgboost`, `scikit-learn`, `pandas`, `numpy`, `plotly`, `httpx`)*
 
-### 2. Launch Interactive Web Dashboard
+### 2. Launch the Connected HTML Dashboard + AI Engine
 ```powershell
-python run.py
+python -m uvicorn api.main:app --port 8000
 ```
-Open your browser to: **`http://localhost:8501`**
+Open **`http://localhost:8000`** in your browser.
 
-### 3. Launch FastAPI Prediction Service (Optional)
+### 3. Launch the Full Interactive Clinical Streamlit Suite
 ```powershell
-python run.py api
+python -m streamlit run website/app.py --server.port=8501
 ```
-Access interactive Swagger API documentation at: **`http://127.0.0.1:8000/docs`**
+Open **`http://localhost:8501`** in your browser.
 
 ---
 
-## 🧭 Repository Architecture
-
-```
-glucobloom/
-├── data/
-│   ├── sample_template.csv         # Ready-to-use CSV template for custom uploads
-│   ├── generate_cgm_data.py        # Physiological multi-patient CGM generator
-│   └── timeseries.csv              # 200 virtual diabetic patients (806,400 readings, git-ignored)
-├── model/
-│   ├── train_pipeline.py           # Preprocessing, patient splitting, XGBoost, quantiles & personalization
-│   ├── clarke_error_grid.py        # Clarke Error Grid Analysis (EGA) computation
-│   ├── glucobloom_general.pkl      # General Foundation Model
-│   ├── glucobloom_lo.pkl           # 10th percentile quantile regressor
-│   ├── glucobloom_hi.pkl           # 90th percentile quantile regressor
-│   └── glucobloom_personalized_p8.pkl # Fine-tuned personalized digital twin
-├── api/
-│   ├── main.py                     # FastAPI REST API implementing the Shared Contract
-│   └── test_api.py                 # Automated unit tests for all endpoints
-├── website/
-│   └── app.py                      # Full Streamlit 7-module clinical dashboard
-├── outputs/                        # Serialized benchmark metrics, time-machine traces, and EGA data
-├── docs/
-│   ├── PS.md                       # Formal Problem Statement
-│   ├── DATA.md                     # Data schema & gap handling specifications
-│   ├── RESULTS.md                  # Comprehensive empirical evaluation results
-│   └── PITCH_DECK.md               # 3-minute pitch deck & word-for-word demo script
-├── run.py                          # Unified single launcher
-└── .gitignore                      # Privacy guardrail: blocks raw clinical data from version control
-```
-
----
-
-## 🌟 The 5 Signature Features
-
-1. **🔮 30-Minute Forward Forecast Cone `[🟢 WORKING]`**
-   * Projects glucose 30 minutes ahead ($t+6$ readings) with an 80% shaded prediction interval.
-   * Includes live CSV upload support for personal CGM datasets.
-2. **🧬 Digital Twin Evolution `[🟢 WORKING]`**
-   * Shows error decreasing across Day 1, Day 3, Day 5, and Day 8 as the twin learns personal metabolic kinetics.
-3. **⏳ Glucose Time Machine & Clarke Error Grid `[🟢 WORKING]`**
-   * Scrub through history to audit predictions against actual values.
-   * Visualizes clinical safety zones (Zones A through E).
-4. **🧪 Scenario Studio ("Fan of Futures") `[🟡 DEMONSTRATION]`**
-   * 3 branching pathways: Sedentary (+0 min walk) vs Light Walk (+15 min) vs Active Walk (+30 min).
-   * Interactive carbohydrate meal diary.
-5. **🛡️ Smart Data Quality Checker `[🟢 WORKING]`**
-   * Automatically detects sensor dropouts (>15 min), missing timestamps, and compression artifacts.
-
----
-
-## ⚕️ Ethics & Medical Disclaimer
-GlucoBloom is an educational and research prototype. It does not provide medical advice and must never be used to make clinical diagnosis or treatment decisions.
+## ⚕️ Medical Ethics & Privacy Disclaimer
+GlucoBloom is an educational and computational research prototype. It does not provide medical diagnosis or treatment advice. In accordance with clinical data ethics, raw patient CGM time series are never committed to version control and are strictly git-ignored.
