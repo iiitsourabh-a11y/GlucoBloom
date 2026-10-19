@@ -13,14 +13,15 @@
 
 ### 1. Team Details
 * **Team Name:** Team GlucoBloom
-* **Lead Engineer (Person A - AI/ML & Pipeline):** Sourabh ([@iiitsourabh-a11y](https://github.com/iiitsourabh-a11y))
-* **Co-Developer (Person B - Web & Clinical UI):** Clinical Frontend Developer
+* **Lead Engineer (Person A - AI/ML & Pipeline):** Sourabh — **IIIT Agartala** ([@iiitsourabh-a11y](https://github.com/iiitsourabh-a11y))
+* **Co-Developer (Person B - Web & Clinical UI):** Srishti Das Chaudhury — **NIT Agartala**
 * **Contact Email:** iiitsourabh@gmail.com
-* **Official Repository Link:** [https://github.com/iiitsourabh-a11y/glucobloom](https://github.com/iiitsourabh-a11y/glucobloom)
+* **Official Repository Link:** [https://github.com/iiitsourabh-a11y/GlucoBloom](https://github.com/iiitsourabh-a11y/GlucoBloom)
 
 ### 2. College / Incubator Information
-* **Institution / University:** [Your University / College Name Here]
-* **Incubator / Department:** Department of Computer Science & Artificial Intelligence / Healthcare Innovation Lab
+* **Institution 1 (AI/ML Lead):** Indian Institute of Information Technology Agartala (IIIT Agartala)
+* **Institution 2 (Web & Clinical UI):** National Institute of Technology Agartala (NIT Agartala)
+* **Department:** Computer Science & Engineering / Artificial Intelligence & Healthcare Innovation Lab
 
 ### 3. Project Title
 **GlucoBloom: An AI-Powered Personalized Digital Twin for Continuous Glucose Forecasting, Uncertainty Quantification, and What-If Lifestyle Simulation**
